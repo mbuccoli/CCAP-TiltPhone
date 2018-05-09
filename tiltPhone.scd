@@ -20,14 +20,16 @@ SynthDef("simpleSin", {
 var instr;
 instr= Synth(\simpleSin);
 instr.set(\amp,0.9);
-instr.set(\freq,100);
+instr.set(\freq,440);
 )
 
 
 
 //set the server
-NetAddr("192.168.1.7",57120);
-
+(
+thisProcess.openUDPPort(57120);
+NetAddr("192.168.0.101",57120);
+)
 // online use
 (
 var instr; // here we have an instrument
@@ -43,8 +45,7 @@ OSCdef('OSCreceiver',
 		msg.postln; // this shows the msg: msg[0]=tag, msg[1], msg[2], ... are the actual values
 		freq= 440*(2-msg[1]); // rotation assigned to frequency
 		freq.postln;
-
-		amp= msg[3]+1; // rotation assign to amplitude
+		amp= msg[0]+1; // rotation assign to amplitude
 		amp.postln;
 		instr.set(\freq,freq, \amp,amp); // change the frequency and amplitude of our instrument
 
